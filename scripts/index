@@ -1,0 +1,91 @@
+#!/usr/bin/env node
+
+const fs = require('fs')
+const path = require('path')
+const { promisify } = require('util')
+
+const yargs = require('yargs')
+const { sync: rimraf } = require('rimraf')
+const mkdirp = promisify(require('mkdirp'))
+const ncp = promisify(require('ncp').ncp)
+
+const INDEXER_NAME = 'indexer.js'
+
+const RAW_DIR = 'raw'
+const API_DIR = 'api'
+
+const exec = async ({ all, db: dbs, input, output }) => {
+  if (all) {
+    dbs = fs.readdirSync(input)
+  }
+
+  const databases = dbs.map(db => ({
+    name: db,
+    dir: path.resolve(input, db),
+  }))
+
+  ensureDatabasesExist(databases)
+
+  for (const { name, dir } of databases) {
+    console.log(`Processing database '${name}'`)
+
+    const rawPath = path.resolve(output, RAW_DIR, name)
+    const apiPath = path.resolve(output, API_DIR, name)
+
+    rimraf(rawPath)
+    rimraf(apiPath)
+
+    await mkdirp(rawPath)
+    await mkdirp(apiPath)
+    await ncp(dir, rawPath)
+    
+    const indexer = require(path.resolve(rawPath, INDEXER_NAME))
+    await indexer.index(rawPath, apiPath)
+  }
+}
+
+const ensureDatabasesExist = databases => {
+  databases.forEach(({ dir }) => {
+    if (!fs.existsSync(dir)) {
+      throw new Error(`Couldn't find database at ${dir}`)
+    }
+
+    const indexer = path.resolve(dir, INDEXER_NAME)
+    if (!fs.existsSync(indexer)) {
+      throw new Error(`Couldn't find indexer at ${indexer}`)
+    }
+  })
+}
+
+exec(
+  yargs
+    .usage('Usage: $0')
+    .option('db', {
+      alias: 'd',
+      describe: 'Databases to build (many can be added with multiple flags or separated with spaces)',
+      array: true,
+    })
+    .option('all', {
+      alias: 'a',
+      default: false,
+      describe: 'Build all present databases',
+      type: 'boolean',
+    })
+    .option('input', {
+      alias: 'i',
+      default: path.resolve(__dirname, '../data'),
+      describe: 'Input path to databases directory',
+      type: 'string',
+    })
+    .option('output', {
+      alias: 'o',
+      default: path.resolve(__dirname, '../build'),
+      describe: 'Output path to directory to save build artifacts',
+      type: 'string',
+    })
+    .argv
+)
+.catch(err => {
+  console.error(err)
+  process.exit(1)
+})
