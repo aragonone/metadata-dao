@@ -4,7 +4,7 @@
     "name": "Aragon Network Token",
     "symbol": "ANT",
     "decimals": 18,
-    "image-url": "@link(icons/ant.png)",
+    "image-url": "/raw/tokens/icons/ant.png",
     "info": "https://wiki.aragon.org/documentation/aragon_network_token/"
   },
   {

@@ -1,12 +1,18 @@
 {
   "name": "metadata-dao",
   "version": "1.0.0",
-  "description": "",
+  "description": "An IPFS database API managed by an Aragon DAO that curates Ethereum contract metadata",
   "main": "index.js",
   "scripts": {
+    "build": "npm run index",
+    "prepublishOnly": "npm run build",
     "index": "scripts/index --all",
     "index:tokens": "scripts/index --db tokens",
-    "index:radspec": "scripts/index --db radspec"
+    "index:radspec": "scripts/index --db radspec",
+    "publish": "aragon apm publish patch --only-content --files build",
+    "publish:mainnet": "npm run publish -- --environment mainnet",
+    "publish:rinkeby": "npm run publish -- --environment rinkeby",
+    "publish:staging": "npm run publish -- --environment staging"
   },
   "author": "Aragon Association",
   "license": "GPL-3.0",
@@ -15,5 +21,9 @@
     "ncp": "^2.0.0",
     "rimraf": "^2.6.3",
     "yargs": "^13.1.0"
+  },
+  "devDependencies": {
+    "@aragon/cli": "5.2.3",
+    "@aragon/os": "^4.0.1"
   }
 }
