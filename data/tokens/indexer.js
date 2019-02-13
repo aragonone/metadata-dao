@@ -2,13 +2,13 @@ const IndexLib = require('../../../lib/index-lib') // This will be executed insi
 
 const views = [
   {
-    key: 'address',
-    api: 'addr',
+    api: 'addr',    // on the /api/tokens/addr/:addr resource
+    key: 'address', // index by token address
   }, 
   {
-    key: 'symbol',
-    api: 'ticker',
-    pathTransform: ({ symbol }) => symbol.toLowerCase(),
+    api: 'ticker',  // on the /api/tokens/ticker/:ticker resource
+    key: 'symbol',  // index by token symbol
+    pathTransform: ({ symbol }) => symbol.toLowerCase(), // paths are the lowercased token symbol /api/tokens/ticker/ant
   }
 ]
 
