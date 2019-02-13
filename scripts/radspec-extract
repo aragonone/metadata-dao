@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+
+const fs = require('fs')
+const path = require('path')
+const { promisify } = require('util')
+const yargs = require('yargs')
+const extractor = require('@aragon/cli/src/helpers/solidity-extractor.js') // HACK
+
+const exec = async ({ inputs, output }) => {
+  const extracted = await Promise.all(inputs.map(extractor))
+  const functions = extracted
+    .reduce((acc, fns) => [...acc, ...fns], []) // flatten
+    .filter(({ notice }) => notice) // filter out empty strings
+    .reduce((acc, { sig, notice }) => ({ ...acc, [sig]: notice }), {}) // proccess
+
+  const db = require(output)
+  const newDb = { ...db, ...functions } // new values override
+
+  fs.writeFileSync(output, JSON.stringify(newDb, 0, 2))
+
+  console.log(`Saved ${Object.keys(newDb).length - Object.keys(db).length} functions to ${output}`)
+}
+
+exec(
+  yargs
+    .usage('Usage: $0')
+    .option('inputs', {
+      alias: 'i',
+      require: true,
+      describe: 'Input path to databases directory',
+      array: true
+    })
+    .option('output', {
+      alias: 'o',
+      default: path.resolve(__dirname, '../data/radspec/db.json'),
+      describe: 'Output path to radspec db file',
+      type: 'string',
+    })
+    .argv
+  )
+  .catch(err => {
+    console.error(err)
+    process.exit(1)
+  })
