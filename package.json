@@ -17,6 +17,7 @@
   "author": "Aragon Association",
   "license": "GPL-3.0",
   "dependencies": {
+    "js-sha3": "^0.8.0",
     "mkdirp": "^0.5.1",
     "ncp": "^2.0.0",
     "rimraf": "^2.6.3",
