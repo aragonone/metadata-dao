@@ -3,7 +3,7 @@ const { keccak256 } = require('js-sha3')
 
 const sigBytes = signature => `0x${keccak256(signature).slice(0, 8)}`
 
-const index = [
+const views = [
   {
     key: '@key',
     api: 'sigs',
@@ -20,4 +20,4 @@ const index = [
   }
 ]
 
-module.exports = new IndexLib(index)
+module.exports = new IndexLib(views)

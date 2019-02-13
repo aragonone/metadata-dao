@@ -1,6 +1,6 @@
 const IndexLib = require('../../../lib/index-lib') // This will be executed inside build/raw/[dbName]
 
-const index = [
+const views = [
   {
     key: 'address',
     api: 'addr',
@@ -12,4 +12,4 @@ const index = [
   }
 ]
 
-module.exports = new IndexLib(index)
+module.exports = new IndexLib(views)
