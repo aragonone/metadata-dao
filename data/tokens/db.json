@@ -1,0 +1,10 @@
+[
+  {
+    "address": "0x960b236A07cf122663c4303350609A66A7B288C0",
+    "name": "Aragon Network Token",
+    "symbol": "ANT",
+    "decimals": 18,
+    "image-url": "@link(icons/ant.png)",
+    "info": "https://wiki.aragon.org/documentation/aragon_network_token/"
+  }
+]
