@@ -34,7 +34,7 @@ const exec = async ({ inputs, output }) => {
 
   fs.writeFileSync(output, JSON.stringify(newDb, 0, 2))
 
-  console.log(`Saved ${Object.keys(newDb).length - Object.keys(db).length} functions to ${output}`)
+  console.log(`Saved ${Object.keys(functions).length} functions to ${output}`)
 }
 
 exec(
