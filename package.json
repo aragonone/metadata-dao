@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@aragon/cli": "5.2.3",
-    "@aragon/os": "^4.0.1"
+    "@aragon/os": "^4.0.1",
+    "radspec": "^1.1.5"
   }
 }
